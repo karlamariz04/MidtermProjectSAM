@@ -475,12 +475,12 @@ function App() {
 
         <section id="about" className="about-section scroll-mt-24 py-24 sm:py-28">
           <div className="about-layout mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:gap-20 lg:px-10">
-            <div className="about-visual">
+            <div className="about-visual scroll-reveal">
               <span className="about-orbit about-orbit-one" aria-hidden="true" />
               <span className="about-orbit about-orbit-two" aria-hidden="true" />
               <div className="about-portrait-frame"><WomanIllustration /></div>
               <div className="about-float-tag"><span><Sparkles size={16} /></span><div><small>FOCUSED ON</small><b>Technology & growth</b></div></div>
-              <div className="about-profile-card">
+              <div className="about-profile-card scroll-reveal">
                 <p className="about-card-label">THE PERSON BEHIND THE PROJECT</p>
                 <h3>Karla Mariz Teraña</h3>
                 <p>Bachelor of Science in Information Technology</p>
@@ -489,7 +489,7 @@ function App() {
               </div>
               <span className="about-index" aria-hidden="true">PROFILE / 01</span>
             </div>
-            <div className="about-copy">
+            <div className="about-copy scroll-reveal">
               <SectionHeading eyebrow="04 / THE PERSON BEHIND THE PROJECT" title="Curious about technology. Focused on growth." description="I am an Information Technology student building practical skills in programming, web development, and system design. This portfolio reflects my learning journey into the certifications, technical foundations, and resources that support a career in system administration." />
               <div className="about-values mt-9">
                 <article className="about-value-card">
