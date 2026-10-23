@@ -114,18 +114,19 @@ function SectionHeading({ eyebrow, title, description, align = 'left' }) {
 
 function OverviewIllustration() {
   return (
-    <div className="overview-art" role="img" aria-label="An animated laptop beside a stack of study papers">
+    <div className="overview-art" role="img" aria-label="Illustration of a cell tower sending Wi-Fi signals across a network">
       <span className="overview-art-glow" />
-      <div className="paper-stack" aria-hidden="true">
-        <div className="paper paper-back"><i /><i /><i /></div>
-        <div className="paper paper-middle"><i /><i /><i /><i /></div>
-        <div className="paper paper-front"><span className="paper-seal"><Check size={14} /></span><b>FIELD NOTES</b><i /><i /><i /></div>
-      </div>
-      <div className="desk-laptop" aria-hidden="true">
-        <div className="laptop-screen"><div className="screen-top"><i /><i /><i /></div><div className="screen-content"><span className="screen-sidebar" /><span className="screen-lines"><i /><i /><i /><i /></span><span className="screen-chart"><i /><i /><i /><i /></span></div></div>
-        <div className="laptop-base"><span /></div>
-      </div>
-      <span className="art-caption"><span /> PLAN · PRACTICE · PROGRESS</span>
+      <span className="signal-orbit signal-orbit-one" />
+      <span className="signal-orbit signal-orbit-two" />
+      <span className="signal-orbit signal-orbit-three" />
+      <span className="signal-node signal-node-one" />
+      <span className="signal-node signal-node-two" />
+      <span className="signal-node signal-node-three" />
+      <div className="signal-tower signal-tower-back" aria-hidden="true"><i className="tower-antenna" /><i className="tower-mast" /><i className="tower-foot" /></div>
+      <div className="signal-tower signal-tower-main" aria-hidden="true"><i className="tower-antenna" /><i className="tower-mast" /><i className="tower-foot" /></div>
+      <div className="signal-tower signal-tower-front" aria-hidden="true"><i className="tower-antenna" /><i className="tower-mast" /><i className="tower-foot" /></div>
+      <div className="signal-ground" aria-hidden="true"><span /><span /><span /><span /></div>
+      <span className="art-caption"><span /> SIGNAL · CONNECT · SECURE</span>
     </div>
   )
 }
@@ -137,7 +138,7 @@ function WomanIllustration() {
 function CertificationCard({ cert, onDetails }) {
   const Icon = cert.icon
   return (
-    <article className="cert-card group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-soft" data-mark={cert.mark}>
+    <article className="cert-card scroll-reveal group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-soft" data-mark={cert.mark}>
       <div className="cert-topline"><span>CAREER CREDENTIAL</span><span className="cert-rosette"><Award size={17} /></span></div>
       <div className="flex items-start justify-between gap-3">
         <span className={`cert-icon cert-${cert.color}`}><Icon size={23} /></span>
@@ -240,6 +241,29 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    document.documentElement.classList.add('motion-ready')
+    return () => document.documentElement.classList.remove('motion-ready')
+  }, [])
+
+  useEffect(() => {
+    const elements = document.querySelectorAll('.scroll-reveal:not(.is-visible)')
+    if (!('IntersectionObserver' in window)) {
+      elements.forEach((element) => element.classList.add('is-visible'))
+      return undefined
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible')
+          observer.unobserve(entry.target)
+        }
+      })
+    }, { rootMargin: '0px 0px -48px 0px', threshold: 0.12 })
+    elements.forEach((element) => observer.observe(element))
+    return () => observer.disconnect()
+  }, [filteredCertifications, search, category])
+
   const statusCommands = {
     services: { command: 'systemctl --failed', output: '0 loaded units listed.', note: 'Service check · confirms whether a service needs attention' },
     network: { command: 'ip addr show', output: 'eth0: state UP · address assigned', note: 'Network check · inspects interfaces and assigned addresses' },
@@ -270,7 +294,7 @@ function App() {
           <div className="hero-grid absolute inset-0 opacity-40" aria-hidden="true" />
           <div className="absolute -right-24 top-8 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" aria-hidden="true" />
           <div className="absolute -bottom-40 left-1/3 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" aria-hidden="true" />
-          <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-[1.08fr_.92fr] lg:px-10 lg:py-28">
+          <div className="hero-layout relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 sm:px-8 sm:py-24 lg:grid-cols-[1.08fr_.92fr] lg:px-10 lg:py-28">
             <div className="max-w-2xl">
               <div className="hero-kicker inline-flex items-center gap-2 rounded-full border border-blue-300/20 bg-white/5 px-3.5 py-2 text-xs font-semibold tracking-wide text-blue-100">
                 <span className="h-2 w-2 rounded-full bg-amber-500" /> FIELD NOTES · SYSTEM ADMINISTRATION
@@ -297,7 +321,7 @@ function App() {
 
             <div className="relative mx-auto w-full max-w-[490px]">
               <OverviewIllustration />
-              <div className="hidden">
+              <div className="hero-console">
               <div className="absolute -inset-5 rounded-[2rem] bg-blue-400/10 blur-2xl" />
               <div className="relative overflow-hidden rounded-[1.7rem] border border-white/15 bg-[#0d2542]/90 p-5 shadow-2xl backdrop-blur sm:p-6">
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -354,9 +378,9 @@ function App() {
 
         <section id="certifications" className="scroll-mt-24 py-20 sm:py-24">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-            <div className="flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
+            <div className="certification-header flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
               <SectionHeading eyebrow="01 / CERTIFICATION PATHWAYS" title="Credentials that build confidence." description="Certifications can help structure your learning and demonstrate knowledge. Explore options by focus area and check each issuing organization's official page for current exam details." />
-              <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-slate-50 p-3">
+              <div className="certification-search w-full max-w-md rounded-2xl border border-slate-200 bg-slate-50 p-3">
                 <label htmlFor="cert-search" className="sr-only">Search certifications</label>
                 <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5">
                   <Search size={18} className="shrink-0 text-slate-400" />
@@ -368,11 +392,12 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="cert-grid mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-2">
+            <div className="certification-index mt-9 flex items-center justify-between gap-4"><span><i /> CURATED CREDENTIALS</span><span>{filteredCertifications.length.toString().padStart(2, '0')} PATHWAYS</span></div>
+            <div className="cert-grid certification-cards mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-2">
               {filteredCertifications.map((cert) => <CertificationCard key={cert.id} cert={cert} onDetails={setSelectedCert} />)}
             </div>
             {filteredCertifications.length === 0 && <div className="mt-8 rounded-2xl border border-dashed border-slate-300 p-10 text-center"><CircleHelp className="mx-auto text-slate-400" size={28} /><h3 className="mt-3 font-bold text-slate-900">No matching certifications</h3><p className="mt-1 text-sm text-slate-500">Try another search term or choose a different category.</p><button onClick={() => {setSearch('');setCategory('All')}} className="mt-4 text-sm font-bold text-blue-600 hover:text-blue-800">Clear filters</button></div>}
-            <div className="mt-7 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/70 p-4 text-sm leading-6 text-slate-600">
+            <div className="certification-note mt-7 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/70 p-4 text-sm leading-6 text-slate-600">
               <CircleHelp size={19} className="mt-0.5 shrink-0 text-blue-600" />
               <p><strong className="text-slate-800">A helpful reminder:</strong> a certification is one part of career development. Hands-on labs, documentation, projects, and troubleshooting practice are also important. Certification costs and eligibility can vary by program and region.</p>
             </div>
@@ -382,7 +407,7 @@ function App() {
         <section id="skills" className="scroll-mt-24 bg-slate-50 py-20 sm:py-24">
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading eyebrow="02 / SKILLS & QUALIFICATIONS" title="The foundations behind dependable systems." description="System Administrators combine technical knowledge with careful problem-solving. These six skill areas provide a practical foundation to develop over time." />
-            <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="skill-grid mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {skills.map((skill, index) => {
                 const Icon = skill.icon
                 return <article key={skill.title} className={`skill-row rounded-2xl border border-slate-200/80 bg-white p-6 transition hover:border-blue-200 hover:shadow-soft ${expandedSkill === index ? 'skill-row-open' : ''}`}>
@@ -412,19 +437,19 @@ function App() {
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <SectionHeading eyebrow="03 / LEARNING RESOURCES" title="A practical route through the field." description="Build confidence in stages. Start with the fundamentals, then use trusted documentation and guided platforms to practice real administration topics." />
             <div className="resource-layout mt-12">
-              <aside className="learning-route">
+              <aside className="learning-route scroll-reveal">
                 <div className="route-heading"><span className="route-icon"><BookOpen size={19} /></span><div><p>YOUR STUDY ROUTE</p><h3>Learn in layers</h3></div></div>
                 <ol className="route-steps">
                   {['Computer & operating systems', 'Networking essentials', 'Linux or Windows administration', 'Security fundamentals', 'Scripting & automation'].map((step, index) => <li key={step}><span>{String(index + 1).padStart(2, '0')}</span><p>{step}</p></li>)}
                 </ol>
                 <p className="route-note">Follow the sequence at your own pace, and pair each topic with a small hands-on lab.</p>
               </aside>
-              <div className="resource-catalog">
+              <div className="resource-catalog scroll-reveal">
                 <div className="resource-catalog-head"><div><p className="eyebrow">TRUSTED PLATFORMS</p><h3>Choose a place to begin</h3></div><span>04 SOURCES</span></div>
                 <div className="resource-list">
                   {resources.map((resource, index) => {
                     const Icon = resource.icon
-                    return <article key={resource.title} className={`resource-entry resource-entry-${resource.accent}`}>
+                    return <article key={resource.title} className={`resource-entry resource-entry-${resource.accent} scroll-reveal`}>
                       <span className="resource-index">0{index + 1}</span>
                       <span className={`resource-icon resource-${resource.accent}`}><Icon size={22} /></span>
                       <div className="resource-copy"><p>{resource.type}</p><h4>{resource.title}</h4><span>{resource.text}</span></div>
